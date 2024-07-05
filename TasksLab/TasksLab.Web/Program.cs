@@ -27,6 +27,19 @@ app.MapGet("/test", () => TypedResults.Ok("Testing 1, 2, 3,...."))
          Tags = new List<OpenApiTag> { new() { Name = "Tasks Lab API" } }
      });
 
+app.MapGet("/tasks", async (TasksLabDbContext dbContext) =>
+{
+    var tasks = await dbContext.Tasks.ToListAsync();
+    return tasks;
+})
+    .WithName("Get All Tasks")
+    .WithOpenApi(x => new OpenApiOperation(x)
+    {
+        Summary = "Get All Tasks",
+        Description = "Returns all tasks in the database.",
+        Tags = new List<OpenApiTag> { new() { Name = "Tasks Lab API" } }
+    });
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
